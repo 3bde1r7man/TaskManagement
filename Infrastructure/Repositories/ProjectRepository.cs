@@ -1,44 +1,56 @@
 ﻿using Application.Common.Ineterfaces.Repositories;
 using Domain.Entities.ProjectModels;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Infrastructure.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
-        public Task AddProjectAsync(Project project)
+        private readonly AppDbContext _context;
+
+        public ProjectRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task DeleteProjectAsync(Project project)
+        public async Task AddProjectAsync(Project project)
         {
-            throw new NotImplementedException();
+            await _context.Projects.AddAsync(project);
         }
 
-        public Task DeleteProjectAsync(int id)
+        public async Task DeleteProjectAsync(Project project)
         {
-            throw new NotImplementedException();
+            _context.Projects.Remove(project);
         }
 
-        public Task<Project>? FindByIdAsync(int id)
+        public async Task DeleteProjectAsync(int id)
         {
-            throw new NotImplementedException();
+            var project = await FindByIdAsync(id);
+            if (project != null)
+                _context.Projects.Remove(project);
+
         }
 
-        public Task<IEnumerable<Project>> GetAllProjectsAsync()
+        public async Task<Project>? FindByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Projects.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
+        {
+            return await _context.Projects.ToListAsync();
         }
 
         public Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            return _context.SaveChangesAsync();
         }
 
-        public Task UpdateProjectAsync(Project project)
+        public async Task UpdateProjectAsync(Project project)
         {
-            throw new NotImplementedException();
+            _context.Projects.Update(project);
         }
     }
 }

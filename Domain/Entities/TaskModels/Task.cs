@@ -19,7 +19,5 @@ namespace Domain.Entities.TaskModels
         public Project Project { get; set; } = null!;
         public ICollection<Category>? Categories { get; set; } = null!;
         public ICollection<UserTask>? AssigneUsers { get; set; } = null!;
-
-
     }
 }

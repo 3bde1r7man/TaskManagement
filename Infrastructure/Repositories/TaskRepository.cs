@@ -19,10 +19,9 @@ namespace Infrastructure.Repositories
             await _context.Tasks.AddAsync(task);
         }
 
-        public Task DeleteTaskAsync(Domain.Entities.TaskModels.Task task)
+        public async Task DeleteTaskAsync(Domain.Entities.TaskModels.Task task)
         {
             _context.Tasks.Remove(task);
-            return Task.CompletedTask;
         }
 
         public async Task DeleteTaskAsync(int id)
@@ -72,10 +71,9 @@ namespace Infrastructure.Repositories
             return _context.SaveChangesAsync();
         }
 
-        public Task UpdateTaskAsync(Domain.Entities.TaskModels.Task task)
+        public async Task UpdateTaskAsync(Domain.Entities.TaskModels.Task task)
         {
             _context.Tasks.Update(task);
-            return Task.CompletedTask;
         }
     }
 }
