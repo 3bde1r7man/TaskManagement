@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Domain.Entities.TaskModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities
 {
@@ -15,5 +16,9 @@ namespace Domain.Entities
         // Refresh Token properties
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        // Navigation property
+        public ICollection<UserProject> Projects { get; set; } = new List<UserProject>();
+        public ICollection<UserTask> Tasks { get; set; } = new List<UserTask>();
     }
 }

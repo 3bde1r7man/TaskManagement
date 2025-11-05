@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.ProjectModels;
 using Domain.Entities.TaskModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace Infrastructure.Data
         
         public DbSet<Domain.Entities.TaskModels.Task> Tasks { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -14,7 +14,7 @@ namespace Domain.Entities.TaskModels
         public TaskStatus Status { get; set; } = TaskStatus.Pending;
 
         public ICollection<Category>? Categories { get; set; }
-        public ICollection<User>? AssigneUsers { get; set; }
+        public ICollection<UserTask>? AssigneUsers { get; set; }
 
     }
 }
