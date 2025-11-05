@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Entities.ProjectModels;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.TaskModels
 {
@@ -12,9 +14,12 @@ namespace Domain.Entities.TaskModels
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public TaskStatus Status { get; set; } = TaskStatus.Pending;
+        [ForeignKey("Project")]
+        public int ProjectId { get; set; }
+        public Project Project { get; set; } = null!;
+        public ICollection<Category>? Categories { get; set; } = null!;
+        public ICollection<UserTask>? AssigneUsers { get; set; } = null!;
 
-        public ICollection<Category>? Categories { get; set; }
-        public ICollection<UserTask>? AssigneUsers { get; set; }
 
     }
 }

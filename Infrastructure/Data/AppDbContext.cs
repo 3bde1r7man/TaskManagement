@@ -14,6 +14,8 @@ namespace Infrastructure.Data
         public DbSet<Domain.Entities.TaskModels.Task> Tasks { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
+        public DbSet<UserTask> UserTasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

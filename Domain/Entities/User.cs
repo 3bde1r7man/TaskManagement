@@ -18,7 +18,7 @@ namespace Domain.Entities
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
         // Navigation property
-        public ICollection<UserProject> Projects { get; set; } = new List<UserProject>();
-        public ICollection<UserTask> Tasks { get; set; } = new List<UserTask>();
+        public ICollection<UserProject> Projects { get; set; } = null!;
+        public ICollection<UserTask> Tasks { get; set; } = null!;
     }
 }
