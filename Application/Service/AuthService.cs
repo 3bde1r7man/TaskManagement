@@ -103,6 +103,10 @@ namespace Cre8Hub.Application.Services
 
                 if (result.Succeeded)
                 {
+                    // Get user roles from Identity
+                    var userRoles = await _userRepository.GetRolesAsync(user);
+                    var userRole = userRoles.FirstOrDefault() ?? user.Role.ToString();
+
                     // Generate Access Token and Refresh Token
                     var token = _jwtService.GenerateJwtToken(user, user.Role.ToString(), _jwtSettings);
                     var refreshToken = _jwtService.GenerateRefreshToken();
