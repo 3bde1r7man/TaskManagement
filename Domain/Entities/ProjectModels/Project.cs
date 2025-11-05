@@ -10,9 +10,14 @@ namespace Domain.Entities.ProjectModels
         [Required]
         public required string Title { get; set; }
         public string? Description { get; set; }
-        public DateTime StartDate { get; set; } = DateTime.UtcNow;
-        public DateTime EndDate { get; set; }
-        public ProjectStatus Status { get; set; } = ProjectStatus.NotStarted;
+        [Required]
+        public required DateOnly StartDate { get; set; }
+        [Required]
+        public required DateOnly DueDate { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
+        public required ProjectStatus Status { get; set; } = ProjectStatus.NotStarted;
 
         // Navigation property
         public ICollection<TaskModels.Task> Tasks { get; set; } = null!;

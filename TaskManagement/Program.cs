@@ -1,9 +1,13 @@
+using Application.Common.Ineterfaces;
+using Application.Common.Ineterfaces.Repositories;
 using Application.Common.Interfaces;
 using Application.Models;
+using Application.Service;
 using Cre8Hub.Application.Services;
 using Cre8Hub.Infrastructure.Repositories;
 using Domain.Entities;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -110,9 +114,16 @@ builder.Services.AddSwaggerGen(options =>
 // Register application services
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+
 
 // Register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+
 
 
 var app = builder.Build();

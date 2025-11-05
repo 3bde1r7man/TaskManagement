@@ -52,5 +52,18 @@ namespace Infrastructure.Repositories
         {
             _context.Projects.Update(project);
         }
+
+        public async Task<IEnumerable<Project>> GetProjectsByUserIdAsync(int userId)
+        {
+            return await _context.UserProjects.Where(up => up.UserId == userId).Include( up => up.Project).
+                Select(up => up.Project).ToListAsync();
+        }
+
+        public IEnumerable<Project> SearchProjects(string query)
+        {
+            return _context.Projects
+                .Where(p => p.Title.Contains(query) || p.Description.Contains(query))
+                .ToList();
+        }
     }
 }

@@ -13,7 +13,12 @@ namespace Domain.Entities.TaskModels
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public TaskStatus Status { get; set; } = TaskStatus.Pending;
+        [Required]
+        public required DateOnly StartDate { get; set; }
+        [Required]
+        public required DateOnly DueDate { get; set; }
+        [Required]
+        public required TaskStatus Status { get; set; } = TaskStatus.Pending;
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
         public Project Project { get; set; } = null!;

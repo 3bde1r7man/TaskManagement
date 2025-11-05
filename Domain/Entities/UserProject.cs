@@ -6,7 +6,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public User user { get; set; } = null!;
+        public User User { get; set; } = null!;
         public int ProjectId { get; set; }
         public required string ProjectName { get; set; }
         public Project Project { get; set; } = null!;

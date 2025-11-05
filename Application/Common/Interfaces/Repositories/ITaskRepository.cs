@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 
 
-namespace Application.Common.Ineterfaces.Repositories
+namespace Application.Common.Interfaces
 {
     public interface ITaskRepository
     {
