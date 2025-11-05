@@ -3,6 +3,7 @@ using Application.Common.Results;
 using Application.DTOs;
 using Domain.Entities;
 using Domain.Entities.ProjectModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Service
 {
@@ -26,6 +27,10 @@ namespace Application.Service
             if (user == null)
             {
                 return ServiceResult<bool>.Failure("User not found.");
+            }
+            if (project.Users.Any(up => up.UserId == userId))
+            {
+                return ServiceResult<bool>.Failure("User is already assigned to this project.");
             }
 
             project.Users.Add(new UserProject

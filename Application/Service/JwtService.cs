@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace Cre8Hub.Application.Services
+namespace Application.Service
 {
     public class JwtService : IJwtService
     {

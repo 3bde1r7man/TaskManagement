@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Constants
+﻿namespace Domain.Constants
 {
     public static class RoleConstants
     {
-        public const string Admin = "admin";
-        public const string User = "user";
+        // These MUST match exactly what's in your JWT tokens
+        public const string Admin = "Admin";
+        public const string User = "User";
+
+        // Helper method to get all roles
+        public static string[] AllRoles => new[] { Admin, User };
     }
 }

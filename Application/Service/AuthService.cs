@@ -7,7 +7,7 @@ using Application.Common.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Cre8Hub.Application.Services
+namespace Application.Service
 {
     public class AuthService : IAuthService
     {

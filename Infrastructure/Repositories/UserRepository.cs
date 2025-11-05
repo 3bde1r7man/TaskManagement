@@ -3,7 +3,7 @@ using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 
-namespace Cre8Hub.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

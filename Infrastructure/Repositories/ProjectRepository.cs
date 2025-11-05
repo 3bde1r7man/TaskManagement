@@ -1,4 +1,4 @@
-﻿using Application.Common.Ineterfaces.Repositories;
+﻿using Application.Common.Interfaces;
 using Domain.Entities.ProjectModels;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +33,11 @@ namespace Infrastructure.Repositories
 
         }
 
-        public async Task<Project>? FindByIdAsync(int id)
+        public async Task<Project?> FindByIdAsync(int id)
         {
-            return await _context.Projects.FindAsync(id);
+            return await _context.Projects
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IEnumerable<Project>> GetAllProjectsAsync()

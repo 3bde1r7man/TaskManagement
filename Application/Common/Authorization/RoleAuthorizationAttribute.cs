@@ -10,6 +10,8 @@ namespace Application.Common.Authorization
     {
         public AuthorizeUserAttribute()
         {
+            // Set the authentication scheme explicitly
+            AuthenticationSchemes = "Bearer";
             Roles = RoleConstants.User;
         }
     }
@@ -21,7 +23,21 @@ namespace Application.Common.Authorization
     {
         public AuthorizeAdminAttribute()
         {
+            // Set the authentication scheme explicitly
+            AuthenticationSchemes = "Bearer";
             Roles = RoleConstants.Admin;
+        }
+    }
+
+    /// <summary>
+    /// Authorization attribute for multiple roles
+    /// </summary>
+    public class AuthorizeRolesAttribute : AuthorizeAttribute
+    {
+        public AuthorizeRolesAttribute(params string[] roles)
+        {
+            AuthenticationSchemes = "Bearer";
+            Roles = string.Join(",", roles);
         }
     }
 }
