@@ -5,42 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : GenericRepository<Domain.Entities.TaskModels.Task>, ITaskRepository
     {
-        private readonly AppDbContext _context;
 
-        public TaskRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-        public async Task AddTaskAsync(Domain.Entities.TaskModels.Task task)
-        {
-            await _context.Tasks.AddAsync(task);
-        }
-
-        public async Task DeleteTaskAsync(Domain.Entities.TaskModels.Task task)
-        {
-            _context.Tasks.Remove(task);
-        }
-
-        public async Task DeleteTaskAsync(int id)
-        {
-            var task = await FindByIdAsync(id);
-            if (task != null)
-                _context.Tasks.Remove(task);
-        }
-
-        public async Task<Domain.Entities.TaskModels.Task>? FindByIdAsync(int id)
-        {
-            return await _context.Tasks.FindAsync(id);
-        }
-
-
-        public async Task<IEnumerable<Domain.Entities.TaskModels.Task>> GetAllTasksAsync()
-        {
-            return await _context.Tasks.ToListAsync();
-        }
-
+        public TaskRepository(AppDbContext context) : base(context)
+        { }
 
         public async Task<IEnumerable<Domain.Entities.TaskModels.Task>> GetTasksByProjectId(int projectId)
         {
@@ -53,6 +22,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.UserTasks
                 .Where(ut => ut.UserId == userId)
+                .Include(ut => ut.Task)
                 .Select(ut => ut.Task)
                 .ToListAsync();
         }
@@ -61,18 +31,16 @@ namespace Infrastructure.Repositories
         {
             return await _context.UserTasks
                 .Where(ut => ut.TaskId == taskId)
+                .Include(ut => ut.User)
                 .Select(ut => ut.User)
                 .ToListAsync();
         }
 
-        public Task SaveChangesAsync()
+        public IEnumerable<Domain.Entities.TaskModels.Task> SearchTasks(string query)
         {
-            return _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateTaskAsync(Domain.Entities.TaskModels.Task task)
-        {
-            _context.Tasks.Update(task);
+            return _context.Tasks
+                .Where(t => t.Title.Contains(query) || t.Description.Contains(query))
+                .ToList();
         }
     }
 }

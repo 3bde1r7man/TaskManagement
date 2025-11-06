@@ -17,6 +17,7 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet("{projectId}")]
+        [AuthorizeRoles]
         [ProducesResponseType(typeof(ProjectResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
@@ -37,6 +38,7 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet]
+        [AuthorizeAdmin]
         [ProducesResponseType(typeof(IEnumerable<ProjectResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllProjects()
@@ -191,6 +193,7 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet("search")]
+        [AuthorizeAdmin]
         [ProducesResponseType(typeof(IEnumerable<ProjectResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SearchProjects([FromQuery] string query)
@@ -210,6 +213,7 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet("user/{userId}")]
+        [AuthorizeRoles]
         [ProducesResponseType(typeof(IEnumerable<ProjectResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]

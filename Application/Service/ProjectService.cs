@@ -18,7 +18,7 @@ namespace Application.Service
         }
         public async Task<ServiceResult<bool>> AssignUserToProjectAsync(int projectId, int userId)
         {
-            var project = await projectRepository.FindByIdAsync(projectId);
+            var project = await projectRepository.GetByIdAsync(projectId);
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
@@ -41,7 +41,7 @@ namespace Application.Service
                 User = user,
                 Project = project
             });
-            await projectRepository.UpdateProjectAsync(project);
+            projectRepository.Update(project);
             await projectRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, $"User {user.Name} added to the project {project.Title} Successfully.");
 
@@ -57,7 +57,7 @@ namespace Application.Service
                 DueDate = request.DueDate,
                 Status = request.Status
             };
-            await projectRepository.AddProjectAsync(project);
+            await projectRepository.AddAsync(project);
             await projectRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, "Project created successfully.");
 
@@ -65,12 +65,12 @@ namespace Application.Service
 
         public async Task<ServiceResult<bool>> DeleteProjectAsync(int projectId)
         {
-            var project = await projectRepository.FindByIdAsync(projectId);
+            var project = await projectRepository.GetByIdAsync(projectId);
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
             }
-            await projectRepository.DeleteProjectAsync(project);
+            projectRepository.RemoveAsync(project.Id);
             await projectRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, "Project deleted successfully.");
 
@@ -78,7 +78,7 @@ namespace Application.Service
 
         public async Task<ServiceResult<IEnumerable<ProjectResponse>>> GetAllProjectsAsync()
         {
-            var projects = await projectRepository.GetAllProjectsAsync();
+            var projects = await projectRepository.GetAllAsync();
             
             var projectResponses = projects.Select(p => new ProjectResponse
             {
@@ -95,7 +95,7 @@ namespace Application.Service
 
         public async Task<ServiceResult<ProjectResponse>>? GetProjectByIdAsync(int projectId)
         {
-            var project = await projectRepository.FindByIdAsync(projectId);
+            var project = await projectRepository.G(projectId);
             if (project == null)
             {
                 return ServiceResult<ProjectResponse>.Failure("Project not found.");
@@ -134,7 +134,7 @@ namespace Application.Service
 
         public async Task<ServiceResult<bool>> RemoveUserFromProjectAsync(int projectId, int userId)
         {
-            var project = await projectRepository.FindByIdAsync(projectId);
+            var project = await projectRepository.G(projectId);
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
@@ -150,7 +150,7 @@ namespace Application.Service
                 return ServiceResult<bool>.Failure("User is not assigned to this project.");
             }
             project.Users.Remove(userProject);
-            await projectRepository.UpdateProjectAsync(project);
+            projectRepository.Update(project);
             await projectRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, $"User {user.Name} removed from the project {project.Title} Successfully.");
         }
@@ -172,32 +172,18 @@ namespace Application.Service
 
         public async Task<ServiceResult<bool>> UpdateProjectAsync(UpdateProjectRequest request)
         {
-            var project = await projectRepository.FindByIdAsync(request.Id);
+            var project = await projectRepository.GetByIdAsync(request.Id);    
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
             }
-            if (request.Title != null)
-            {
-                project.Title = request.Title;
-            }
-            if (request.Description != null)
-            {
-                project.Description = request.Description;
-            }
-            if (request.StartDate != null)
-            {
-                project.StartDate = request.StartDate ?? project.StartDate;
-            }
-            if (request.DueDate != null)
-            {
-                project.DueDate = request.DueDate ?? project.DueDate;
-            }
-            if (request.Status != null)
-            {
-                project.Status = request.Status ?? project.Status;
-            }
-            await projectRepository.UpdateProjectAsync(project);
+            project.Title = request.Title ?? project.Title;
+            project.Description = request.Description ?? project.Description;
+            project.StartDate = request.StartDate ?? project.StartDate;
+            project.DueDate = request.DueDate ?? project.DueDate;
+            project.Status = request.Status ?? project.Status;
+
+            projectRepository.Update(project);
             await projectRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, "Project updated successfully.");
         }

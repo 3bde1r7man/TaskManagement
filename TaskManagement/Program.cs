@@ -34,7 +34,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString)
 );
 
-// Configure Identity (ONLY ONCE)
+// Configure Identity
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
     options.Password.RequireDigit = true;
@@ -69,7 +69,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-// Configure JWT Authentication (ONLY ONCE)
+// Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
