@@ -1,6 +1,5 @@
 ﻿using Application.Common.Results;
 using Application.DTOs;
-using Domain.Entities.ProjectModels;
 
 namespace Application.Common.Interfaces
 {
@@ -15,5 +14,7 @@ namespace Application.Common.Interfaces
         Task<ServiceResult<IEnumerable<ProjectResponse>>> SearchProjectsAsync(string query);
         Task<ServiceResult<bool>> AssignUserToProjectAsync(int projectId, int userId);
         Task<ServiceResult<bool>> RemoveUserFromProjectAsync(int projectId, int userId);
+        Task<ServiceResult<ProjectTasksResponse>> GetProjectWithTasksAsync(int projectId);
+        Task<ServiceResult<ProjectUsersResponse>> GetProjectWithUsersAsync(int projectId);
     }
 }

@@ -18,7 +18,7 @@ namespace Application.Service
         }
         public async Task<ServiceResult<bool>> AssignUserToProjectAsync(int projectId, int userId)
         {
-            var project = await projectRepository.GetByIdAsync(projectId);
+            var project = await projectRepository.GetByIdWithUsersAsync(projectId);
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
@@ -37,7 +37,6 @@ namespace Application.Service
             {
                 ProjectId = projectId,
                 UserId = userId,
-                ProjectName = project.Title,
                 User = user,
                 Project = project
             });
@@ -79,7 +78,7 @@ namespace Application.Service
         public async Task<ServiceResult<IEnumerable<ProjectResponse>>> GetAllProjectsAsync()
         {
             var projects = await projectRepository.GetAllAsync();
-            
+
             var projectResponses = projects.Select(p => new ProjectResponse
             {
                 Id = p.Id,
@@ -95,7 +94,7 @@ namespace Application.Service
 
         public async Task<ServiceResult<ProjectResponse>>? GetProjectByIdAsync(int projectId)
         {
-            var project = await projectRepository.G(projectId);
+            var project = await projectRepository.GetByIdAsync(projectId);
             if (project == null)
             {
                 return ServiceResult<ProjectResponse>.Failure("Project not found.");
@@ -134,7 +133,7 @@ namespace Application.Service
 
         public async Task<ServiceResult<bool>> RemoveUserFromProjectAsync(int projectId, int userId)
         {
-            var project = await projectRepository.G(projectId);
+            var project = await projectRepository.GetByIdWithUsersAsync(projectId);
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
@@ -172,7 +171,7 @@ namespace Application.Service
 
         public async Task<ServiceResult<bool>> UpdateProjectAsync(UpdateProjectRequest request)
         {
-            var project = await projectRepository.GetByIdAsync(request.Id);    
+            var project = await projectRepository.GetByIdAsync(request.Id);
             if (project == null)
             {
                 return ServiceResult<bool>.Failure("Project not found.");
@@ -186,6 +185,54 @@ namespace Application.Service
             projectRepository.Update(project);
             await projectRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, "Project updated successfully.");
+        }
+
+        public async Task<ServiceResult<ProjectTasksResponse>> GetProjectWithTasksAsync(int projectId)
+        {
+            var project = await projectRepository.GetByIdWithTasksAsync(projectId);
+            if (project == null)
+            {
+                return ServiceResult<ProjectTasksResponse>.Failure("Project not found.");
+            }
+            var projectTasksResponse = new ProjectTasksResponse
+            {
+                Id = project.Id,
+                Title = project.Title,
+                Description = project.Description,
+                tasks = project.Tasks?.Select(t => new TaskResponse
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Status = t.Status,
+                    StartDate = t.StartDate,
+                    DueDate = t.DueDate
+
+                })
+            };
+            return ServiceResult<ProjectTasksResponse>.Success(projectTasksResponse);
+        }
+
+        public async Task<ServiceResult<ProjectUsersResponse>> GetProjectWithUsersAsync(int projectId)
+        {
+            var project = await projectRepository.GetByIdWithUsersAsync(projectId);
+            if (project == null)
+            {
+                return ServiceResult<ProjectUsersResponse>.Failure("Project not found.");
+            }
+            var projectUsersResponse = new ProjectUsersResponse
+            {
+                Id = project.Id,
+                Title = project.Title,
+                Description = project.Description,
+                Users = project.Users?.Select(up => new UserResponse
+                {
+                    Id = up.User.Id,
+                    Name = up.User.Name,
+                    Email = up.User.Email
+                })
+            };
+            return ServiceResult<ProjectUsersResponse>.Success(projectUsersResponse);
         }
     }
 }

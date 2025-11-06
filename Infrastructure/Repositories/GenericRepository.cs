@@ -92,7 +92,7 @@ namespace Infrastructure.Repositories
             _dbSet.Remove(entity);
         }
 
-        public async void RemoveAsync(int id)
+        public async Task RemoveAsync(int id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
@@ -101,7 +101,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async void RemoveAsync(object id)
+        public async Task RemoveAsync(object id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)

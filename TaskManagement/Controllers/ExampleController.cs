@@ -31,7 +31,7 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet("both")]
-        [AuthorizeAdmin, AuthorizeUser] // Changed to use single attribute with multiple roles
+        [AuthorizeRoles(RoleConstants.Admin, RoleConstants.User)]
         public IActionResult BothRolesEndpoint()
         {
             return Ok(new { message = "This endpoint is accessible by both admin and user roles" });

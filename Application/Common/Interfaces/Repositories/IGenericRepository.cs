@@ -24,8 +24,8 @@ namespace Application.Common.Interfaces
         void Update(TEntity entity);
         void UpdateRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);
-        void RemoveAsync(int id);
-        void RemoveAsync(object id);
+        Task RemoveAsync(int id);
+        Task RemoveAsync(object id);
         void RemoveRange(IEnumerable<TEntity> entities);
         
         // Include operations for navigation properties

@@ -6,6 +6,8 @@ namespace Application.Common.Interfaces
     {
         Task<IEnumerable<Project>> GetProjectsByUserIdAsync(int userId);
         IEnumerable<Project> SearchProjects(string query);
+        Task<Project?> GetByIdWithUsersAsync(int id);
+        Task<Project?> GetByIdWithTasksAsync(int id);
 
     }
 }

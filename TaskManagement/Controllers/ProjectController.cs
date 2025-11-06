@@ -1,6 +1,7 @@
 ﻿using Application.Common.Authorization;
 using Application.Common.Interfaces;
 using Application.DTOs;
+using Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +18,14 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet("{projectId}")]
-        [AuthorizeRoles]
+        [AuthorizeRoles(RoleConstants.Admin, RoleConstants.User)]
         [ProducesResponseType(typeof(ProjectResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProjectById(int projectId)
         {
             var result = await _projectService.GetProjectByIdAsync(projectId);
-            
+
             if (!result.IsSuccess)
             {
                 return NotFound(new ErrorResponse
@@ -44,7 +45,7 @@ namespace TaskManagement.Controllers
         public async Task<IActionResult> GetAllProjects()
         {
             var result = await _projectService.GetAllProjectsAsync();
-            
+
             if (!result.IsSuccess)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse
@@ -76,7 +77,7 @@ namespace TaskManagement.Controllers
             }
 
             var result = await _projectService.CreateProjectAsync(request);
-            
+
             if (!result.IsSuccess)
             {
                 return BadRequest(new ErrorResponse
@@ -109,7 +110,7 @@ namespace TaskManagement.Controllers
             }
 
             var result = await _projectService.UpdateProjectAsync(request);
-            
+
             if (!result.IsSuccess)
             {
                 return BadRequest(new ErrorResponse
@@ -132,7 +133,7 @@ namespace TaskManagement.Controllers
         public async Task<IActionResult> DeleteProject(int projectId)
         {
             var result = await _projectService.DeleteProjectAsync(projectId);
-            
+
             if (!result.IsSuccess)
             {
                 return NotFound(new ErrorResponse
@@ -156,7 +157,7 @@ namespace TaskManagement.Controllers
         public async Task<IActionResult> AssignUserToProject(int projectId, int userId)
         {
             var result = await _projectService.AssignUserToProjectAsync(projectId, userId);
-            
+
             if (!result.IsSuccess)
             {
                 return NotFound(new ErrorResponse
@@ -179,7 +180,7 @@ namespace TaskManagement.Controllers
         public async Task<IActionResult> RemoveUserFromProject(int projectId, int userId)
         {
             var result = await _projectService.RemoveUserFromProjectAsync(projectId, userId);
-            
+
             if (!result.IsSuccess)
             {
                 return NotFound(new ErrorResponse
@@ -199,7 +200,7 @@ namespace TaskManagement.Controllers
         public async Task<IActionResult> SearchProjects([FromQuery] string query)
         {
             var result = await _projectService.SearchProjectsAsync(query);
-            
+
             if (!result.IsSuccess)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse
@@ -213,14 +214,14 @@ namespace TaskManagement.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        [AuthorizeRoles]
+        [AuthorizeAdmin]
         [ProducesResponseType(typeof(IEnumerable<ProjectResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProjectsByUserId(int userId)
         {
             var result = await _projectService.GetProjectsByUserIdAsync(userId);
-            
+
             if (!result.IsSuccess)
             {
                 return NotFound(new ErrorResponse
@@ -231,6 +232,75 @@ namespace TaskManagement.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpGet("user")]
+        [AuthorizeUser]
+        [ProducesResponseType(typeof(IEnumerable<ProjectResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProjectsForCurrentUser()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "user_id");
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new ErrorResponse
+                {
+                    Message = "Invalid user claims",
+                    Errors = new List<string> { "user_id claim is missing or invalid." }
+                });
+            }
+            var result = await _projectService.GetProjectsByUserIdAsync(userId);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse
+                {
+                    Message = result.Message,
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result);
+        }
+
+
+        [HttpGet("{projectId}/with-tasks")]
+        [AuthorizeRoles(RoleConstants.Admin, RoleConstants.User)]
+        [ProducesResponseType(typeof(ProjectTasksResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProjectWithTasks(int projectId)
+        {
+            var result = await _projectService.GetProjectWithTasksAsync(projectId);
+
+            if (!result.IsSuccess)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    Message = result.Message,
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.Data);
+
+        }
+
+        [HttpGet("{projectId}/with-users")]
+        [AuthorizeAdmin]
+        [ProducesResponseType(typeof(ProjectUsersResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProjectWithUsers(int projectId)
+        {
+            var result = await _projectService.GetProjectWithUsersAsync(projectId);
+            if (!result.IsSuccess)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    Message = result.Message,
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.Data);
         }
     }
 }

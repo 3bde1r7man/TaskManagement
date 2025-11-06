@@ -24,5 +24,19 @@ namespace Infrastructure.Repositories
                 .Where(p => p.Title.Contains(query) || p.Description.Contains(query))
                 .ToList();
         }
+
+        public async Task<Project?> GetByIdWithUsersAsync(int id)
+        {
+            return await _context.Projects
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<Project?> GetByIdWithTasksAsync(int id)
+        {
+            return await _context.Projects
+                .Include(p => p.Tasks)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }
