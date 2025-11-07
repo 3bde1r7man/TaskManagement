@@ -16,7 +16,7 @@ namespace Application.Common.Interfaces
         Task<ServiceResult<bool>> RemoveUserFromTaskAsync(int taskId, int userId);
         Task<ServiceResult<IEnumerable<UserResponse>>> GetUsersForTaskAsync(int taskId);
         Task<ServiceResult<IEnumerable<TaskResponse>>> SearchTasksAsync(string query);
-        Task<ServiceResult<bool>> ChangeTaskStatusAsync(int taskId, string status);
+        Task<ServiceResult<bool>> ChangeTaskStatusAsync(int taskId, Domain.Entities.TaskModels.TaskStatus status);
         Task<ServiceResult<IEnumerable<TaskResponse>>> GetUpcomingTasksAsync(int daysAhead);
         Task<ServiceResult<IEnumerable<TaskResponse>>> GetTasksDueOnDateAsync(DateOnly date);
         Task<ServiceResult<IEnumerable<TaskResponse>>> GetTasksByStatusAsync(Domain.Entities.TaskModels.TaskStatus status);

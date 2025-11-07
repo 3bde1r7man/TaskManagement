@@ -54,21 +54,22 @@ namespace Application.Service
             return ServiceResult<bool>.Success(true, $"User {user.Name} assigned to task {task.Title} successfully.");
         }
 
-        public async Task<ServiceResult<bool>> ChangeTaskStatusAsync(int taskId, string status)
+        public async Task<ServiceResult<bool>> ChangeTaskStatusAsync(int taskId, Domain.Entities.TaskModels.TaskStatus status)
         {
             var task = await _taskRepository.GetByIdAsync(taskId);
             if (task == null)
             {
                 return ServiceResult<bool>.Failure("Task not found.");
             }
-            if (!Enum.TryParse<Domain.Entities.TaskModels.TaskStatus>(status, true, out var newStatus))
-            {
-                return ServiceResult<bool>.Failure("Invalid status value.");
-            }
-            task.Status = newStatus;
+            task.Status = status;
             _taskRepository.Update(task);
             await _taskRepository.SaveChangesAsync();
             return ServiceResult<bool>.Success(true, "Task status updated successfully.");
+        }
+
+        public async Task<ServiceResult<bool>> ChangeTaskStatusAsync(int taskId, System.Threading.Tasks.TaskStatus status)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ServiceResult<bool>> CreateTaskAsync(CreateTaskRequest request)
